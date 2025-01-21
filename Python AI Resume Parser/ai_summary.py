@@ -41,11 +41,11 @@ def extract_summary():
         # Use Gemini API to extract the summary and skills
         chat_session = model.start_chat(history=[])
         response_skills = chat_session.send_message(
-            f"Extract skills from this resume:\n{resume_content}"
+            f"You are an AI designed to analyze resumes and extract relevant professional skills in 50 words. From the following resume content, identify the technical, soft, and domain-specific skills explicitly mentioned. Provide the skills as a categorized list under these headers: 'Technical Skills,' 'Soft Skills,' and 'Domain-Specific Skills.' Only include items that are clearly identifiable as skills, avoiding redundant phrases or generic terms. Resume Content: \n{resume_content}"
         )
 
         response_summary = chat_session.send_message(
-            f"Extract skills from this resume:\n{resume_content}"
+            f"You are an AI designed to create professional summaries from resumes. Using the following resume content, generate a concise, high-quality summary within 200 words. Focus on the candidate’s key accomplishments, professional experience, skills, and expertise. Avoid generic phrases and ensure the summary highlights the most impactful and relevant information about the candidate. The summary should read fluently and professionally, suitable for use in a job application or professional profile. Resume Content:\n{resume_content}"
         )
 
         # Return the extracted summary and placeholder for skills

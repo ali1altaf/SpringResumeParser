@@ -50,10 +50,8 @@ public class ResumeService {
             String resumeContent = contentExtractor.extractContent(file);
 
 
-            System.out.println(processResumeContent(resumeContent));
-
-            String skills = resumeSkillsExtractor.extractSkills(resumeContent);
-            String summary = resumeSummarizer.summarize(resumeContent);
+            String skills = processResumeContent(resumeContent).get("skills");
+            String summary = processResumeContent(resumeContent).get("summary");
 
             // Create a Resume entity and save it to the database
             Resume resume = new Resume();
