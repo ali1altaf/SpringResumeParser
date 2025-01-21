@@ -3,18 +3,12 @@ package com.AltafProject.demo.service;
 import com.AltafProject.demo.model.Resume;
 import com.AltafProject.demo.repository.ResumeRepository;
 import com.AltafProject.demo.utils.ResumeContentExtractor;
-import com.AltafProject.demo.utils.ResumeSkillsExtractor;
-import com.AltafProject.demo.utils.ResumeSummarizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.security.cert.Extension;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class ResumeService {
@@ -24,10 +18,6 @@ public class ResumeService {
 
     @Autowired
     private ResumeContentExtractor contentExtractor;
-    @Autowired
-    private ResumeSkillsExtractor resumeSkillsExtractor;
-    @Autowired
-    private ResumeSummarizer resumeSummarizer;
     @Autowired
     private GeminiIntegrationService GeminiIntegrationService;
 
