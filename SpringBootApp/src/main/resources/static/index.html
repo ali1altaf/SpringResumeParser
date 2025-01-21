@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume Summarizer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f7fc;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      width: 400px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    input[type="file"] {
+      font-size: 16px;
+      padding: 10px;
+      margin: 20px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      width: 100%;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Upload Resume</h1>
+  <form id="uploadForm">
+    <input type="file" id="fileInput" name="file" required />
+    <button type="submit">Upload</button>
+  </form>
+</div>
+
+<script>
+  // Event listener for form submission
+  const form = document.getElementById('uploadForm');
+  form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const fileInput = document.getElementById('fileInput');
+      if (fileInput.files.length === 0) {
+          alert("Please select a file to upload!");
+          return;
+      }
+
+      const formData = new FormData();
+      formData.append('file', fileInput.files[0]);
+
+      try {
+          // Upload the file
+          const uploadResponse = await fetch('/api/resumes/upload', {
+              method: 'POST',
+              body: formData,
+          });
+
+          const uploadResult = await uploadResponse.json();
+
+          if (!uploadResponse.ok) {
+              alert(`Error: ${uploadResult.message}`);
+              return;
+          }
+
+          // Parse the uploaded file ID from the response
+          const fileId = uploadResult.id; // Adjust this if the response format differs
+
+          // Redirect to the summary page
+          console.log('Redirecting to summary page with ID:', fileId);
+
+          window.location.href = `/summary.html?id=${fileId}`;
+      } catch (error) {
+          alert(`An error occurred: ${error.message}`);
+      }
+  });
+</script>
+</body>
+</html>

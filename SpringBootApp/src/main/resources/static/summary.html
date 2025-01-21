@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Summary</title>
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+          background-color: #f4f7fc;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+        }
+
+        .container {
+          background-color: white;
+          padding: 30px;
+          border-radius: 10px;
+          box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+          width: 500px;
+          text-align: center;
+        }
+
+        h1 {
+          color: #333;
+          margin-bottom: 20px;
+        }
+
+        .content {
+          text-align: left;
+          margin-top: 20px;
+        }
+
+        .content h3 {
+          color: #007bff;
+          margin-bottom: 10px;
+        }
+
+        .content p {
+          color: #555;
+          line-height: 1.6;
+        }
+
+    .Parse New File-button {
+      margin-top: 20px;
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .reload-button:hover {
+      background-color: #0056b3;
+    }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Resume Details</h1>
+    <div class="content" id="resumeDetails">
+        <!-- Skills and summary will be displayed here -->
+    </div>
+
+    <!-- Back Button -->
+    <a href="index.html" class="Parse New File-button">Parse New File</a>
+</div>
+
+
+<script>
+    // Extract ID from the URL query parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const fileId = urlParams.get('id');
+
+    const resumeDetailsDiv = document.getElementById('resumeDetails');
+
+    if (!fileId) {
+      resumeDetailsDiv.innerHTML = '<p>Error: Invalid or missing file ID.</p>';
+    } else {
+      // Fetch resume details from the server
+      fetch(`/api/resumes/summary/${fileId}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            resumeDetailsDiv.innerHTML = `<p>Error: ${data.error}</p>`;
+          } else {
+            // Display the skills and summary
+            resumeDetailsDiv.innerHTML = `
+              <h3>Skills:</h3>
+              <p>${data.skills}</p>
+              <h3>Summary:</h3>
+              <p>${data.summary}</p>
+            `;
+          }
+        })
+        .catch(error => {
+          resumeDetailsDiv.innerHTML = `<p>Error fetching resume details: ${error.message}</p>`;
+        });
+    }
+</script>
+
+</body>
+</html>
