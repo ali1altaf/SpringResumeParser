@@ -14,8 +14,6 @@ import java.util.Map;
 @Service
 public class GeminiIntegrationService {
 
-
-
     private final String FLASK_API_URL = "http://localhost:5001/extract-summary";
 
     @Value("${gemini.api.key}")

@@ -9,6 +9,7 @@ app = Flask(__name__)
 
 @app.route('/extract-summary', methods=['POST'])
 def extract_summary():
+
     # Get JSON payload from the request
     data = request.json
     resume_content = data.get("resume_content")
