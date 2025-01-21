@@ -5,7 +5,6 @@ import google.generativeai as genai
 app = Flask(__name__)
 
 
-#rakesh='good'
 
 # Configure the Gemini API key
 genai.configure(api_key='AIzaSyB7WPf4-2TNaNl56EjirmSU9MaeBC-61jo')
