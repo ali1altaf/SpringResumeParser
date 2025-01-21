@@ -6,29 +6,32 @@ app = Flask(__name__)
 
 
 
-# Configure the Gemini API key
-genai.configure(api_key='AIzaSyB7WPf4-2TNaNl56EjirmSU9MaeBC-61jo')
-
-# Model configuration
-generation_config = {
-    "temperature": 1,
-    "top_p": 0.95,
-    "top_k": 40,
-    "max_output_tokens": 8192,
-    "response_mime_type": "text/plain",
-}
-
-# Initialize the model
-model = genai.GenerativeModel(
-    model_name="gemini-2.0-flash-exp",
-    generation_config=generation_config,
-)
 
 @app.route('/extract-summary', methods=['POST'])
 def extract_summary():
     # Get JSON payload from the request
     data = request.json
     resume_content = data.get("resume_content")
+
+    gemini_api_key = data.get("api_key")
+
+    # Configure the Gemini API key
+    genai.configure(api_key=gemini_api_key)
+
+    # Model configuration
+    generation_config = {
+        "temperature": 1,
+        "top_p": 0.95,
+        "top_k": 40,
+        "max_output_tokens": 8192,
+        "response_mime_type": "text/plain",
+    }
+
+    # Initialize the model
+    model = genai.GenerativeModel(
+        model_name="gemini-2.0-flash-exp",
+        generation_config=generation_config,
+    )
 
     if not resume_content:
         return jsonify({"error": "Resume content is missing."}), 400
