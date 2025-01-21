@@ -22,8 +22,6 @@ public class ResumeService {
     private GeminiIntegrationService GeminiIntegrationService;
 
 
-
-
     public Map<String, String> processResumeContent(String resumeContent) {
         // Call Flask service for extracting summary and skills
 
