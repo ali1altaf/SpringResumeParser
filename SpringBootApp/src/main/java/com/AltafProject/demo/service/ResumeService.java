@@ -29,7 +29,7 @@ public class ResumeService {
     @Autowired
     private ResumeSummarizer resumeSummarizer;
     @Autowired
-    private GeminiIntegrationService geminiIntegrationService;
+    private GeminiIntegrationService GeminiIntegrationService;
 
 
 
@@ -37,7 +37,7 @@ public class ResumeService {
     public Map<String, String> processResumeContent(String resumeContent) {
         // Call Flask service for extracting summary and skills
 
-        return geminiIntegrationService.getResumeSummaryAndSkills(resumeContent);
+        return GeminiIntegrationService.getResumeSummaryAndSkills(resumeContent);
     }
 
 
@@ -48,8 +48,6 @@ public class ResumeService {
 
 
             String resumeContent = contentExtractor.extractContent(file);
-
-            geminiIntegrationService.getResumeSummaryAndSkills(resumeContent);
 
 
             System.out.println(processResumeContent(resumeContent));
