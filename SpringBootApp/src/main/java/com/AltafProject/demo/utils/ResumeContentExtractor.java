@@ -12,6 +12,14 @@ import java.io.IOException;
 @Component
 public class ResumeContentExtractor {
 
+
+    private String extractTextFromPdf(File pdfFile) throws IOException {
+        try (PDDocument document = PDDocument.load(pdfFile)) {
+            PDFTextStripper pdfStripper = new PDFTextStripper();
+            return pdfStripper.getText(document);
+        }
+    }
+
     public String extractContent(MultipartFile file) throws IOException {
         // Save MultipartFile to a temporary file
         File tempFile = File.createTempFile("resume", ".pdf");
@@ -26,11 +34,6 @@ public class ResumeContentExtractor {
         return textContent;
     }
 
-    private String extractTextFromPdf(File pdfFile) throws IOException {
-        try (PDDocument document = PDDocument.load(pdfFile)) {
-            PDFTextStripper pdfStripper = new PDFTextStripper();
-            return pdfStripper.getText(document);
-        }
-    }
+
 
 }
