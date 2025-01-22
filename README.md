@@ -45,5 +45,5 @@ The **Resume Summarizer** is a web application that extracts and summarizes key 
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/ali1altaf/resume-summarizer.git
+   git clone https://github.com/ali1altaf/SpringResumeParser.git
    cd resume-summarizer
