@@ -53,6 +53,30 @@
     button:hover {
       background-color: #0056b3;
     }
+    /* Spinner styling */
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #007bff;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+
+    /* Spin animation */
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Message styling */
+    .loading-message {
+      color: #007bff;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
   </style>
 </head>
 <body>
@@ -63,11 +87,16 @@
     <input type="file" id="fileInput" name="file" required />
     <button type="submit">Upload</button>
   </form>
+  <div id="loadingSpinner" class="spinner" style="display: none;"></div>
+  <div id="loadingMessage" class="loading-message" style="display: none;">Loading and parsing the resume using AI...</div>
 </div>
 
 <script>
   // Event listener for form submission
   const form = document.getElementById('uploadForm');
+  const loadingSpinner = document.getElementById('loadingSpinner');
+  const loadingMessage = document.getElementById('loadingMessage');
+
   form.addEventListener('submit', async (event) => {
       event.preventDefault();
 
@@ -79,6 +108,11 @@
 
       const formData = new FormData();
       formData.append('file', fileInput.files[0]);
+
+      // Show the spinner and loading message
+      loadingSpinner.style.display = 'block';
+      loadingMessage.style.display = 'block';
+
 
       try {
           // Upload the file
@@ -94,6 +128,9 @@
               return;
           }
 
+          loadingSpinner.style.display = 'none';
+          loadingMessage.style.display = 'none';
+
           // Parse the uploaded file ID from the response
           const fileId = uploadResult.id; // Adjust this if the response format differs
 
@@ -102,6 +139,8 @@
 
           window.location.href = `/summary.html?id=${fileId}`;
       } catch (error) {
+          loadingSpinner.style.display = 'none';
+          loadingMessage.style.display = 'none';
           alert(`An error occurred: ${error.message}`);
       }
   });
