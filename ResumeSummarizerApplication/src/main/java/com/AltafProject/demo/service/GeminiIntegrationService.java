@@ -15,11 +15,11 @@ import java.util.Map;
 public class GeminiIntegrationService {
 
     //Flask API URL mentioned in your Python Flask application
-    //Assigning the value of gemini.api.url from application.properties
+    //Assigning the value of gemini.api.url from application_properties.properties
     @Value("${gemini.api.url}")
     private String FLASK_API_URL;
 
-    //Assigning the value of gemini.api.key from application.properties
+    //Assigning the value of gemini.api.key from application_properties.properties
     @Value("${gemini.api.key}")
     private String geminiApiKey;
 
