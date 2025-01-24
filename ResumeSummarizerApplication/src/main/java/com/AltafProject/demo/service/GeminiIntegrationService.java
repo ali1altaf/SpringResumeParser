@@ -14,13 +14,21 @@ import java.util.Map;
 @Service
 public class GeminiIntegrationService {
 
-    private final String FLASK_API_URL = "http://localhost:5001/extract-summary";
+    //Flask API URL mentioned in your Python Flask application
+    //Assigning the value of gemini.api.url from application.properties
+    @Value("${gemini.api.url}")
+    private String FLASK_API_URL;
 
+    //Assigning the value of gemini.api.key from application.properties
     @Value("${gemini.api.key}")
     private String geminiApiKey;
 
     public String getGeminiApiKey() {
         return geminiApiKey;
+    }
+
+    public String getGeminiApiUrl() {
+        return FLASK_API_URL;
     }
 
 
@@ -41,7 +49,7 @@ public class GeminiIntegrationService {
         HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(requestBody, headers);
 
         ResponseEntity<Map> response = restTemplate.exchange(
-                FLASK_API_URL,
+                getGeminiApiUrl(),
                 HttpMethod.POST,
                 requestEntity,
                 Map.class
