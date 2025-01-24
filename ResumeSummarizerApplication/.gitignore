@@ -16,6 +16,9 @@ target/
 # Ignore application properties
 src/main/resources/application.properties
 
+# Ignore application properties
+src/main/resources/application_properties.properties
+
 ### IntelliJ IDEA ###
 .idea
 *.iws
