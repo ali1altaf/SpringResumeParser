@@ -9,11 +9,11 @@ public class Resume {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(length = 26)
+    @Column(length = 30)
     private String fileName;
-    @Column(length = 400)
-    private String skills;
     @Column(length = 1000)
+    private String skills;
+    @Column(length = 2000)
     private String summary;
 
     public Resume() {
