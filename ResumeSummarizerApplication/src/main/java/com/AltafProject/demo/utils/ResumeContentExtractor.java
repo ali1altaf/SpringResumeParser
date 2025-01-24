@@ -12,7 +12,6 @@ import java.io.IOException;
 @Component
 public class ResumeContentExtractor {
 
-
     private String extractTextFromPdf(File pdfFile) throws IOException {
         try (PDDocument document = PDDocument.load(pdfFile)) {
             PDFTextStripper pdfStripper = new PDFTextStripper();
