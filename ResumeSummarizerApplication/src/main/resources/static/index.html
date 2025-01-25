@@ -5,76 +5,83 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Resume Summarizer</title>
   <style>
+    /* Base styling for the body to ensure a clean and centered layout */
     body {
       font-family: Arial, sans-serif;
-      background-color: #f4f7fc;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      background-color: #f4f7fc; /* Light background color */
+      margin: 0; /* Remove default margin */
+      padding: 0; /* Remove default padding */
+      display: flex; /* Flexbox for centering */
+      justify-content: center; /* Horizontally center content */
+      align-items: center; /* Vertically center content */
+      height: 100vh; /* Full viewport height */
     }
 
+    /* Container styling for the upload form */
     .container {
-      background-color: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-      width: 400px;
-      text-align: center;
+      background-color: white; /* White background for contrast */
+      padding: 30px; /* Internal padding for spacing */
+      border-radius: 10px; /* Rounded corners */
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+      width: 400px; /* Fixed width */
+      text-align: center; /* Center align text */
     }
 
+    /* Styling for the heading */
     h1 {
-      color: #333;
-      margin-bottom: 20px;
+      color: #333; /* Darker text color for readability */
+      margin-bottom: 20px; /* Space below the heading */
     }
 
+    /* Styling for the file input */
     input[type="file"] {
-      font-size: 16px;
-      padding: 10px;
-      margin: 20px 0;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      width: 100%;
+      font-size: 16px; /* Font size for readability */
+      padding: 10px; /* Internal padding */
+      margin: 20px 0; /* Spacing around the input */
+      border-radius: 5px; /* Rounded corners */
+      border: 1px solid #ccc; /* Light border */
+      width: 100%; /* Full width */
     }
 
+    /* Styling for the submit button */
     button {
-      background-color: #007bff;
-      color: white;
-      padding: 12px 20px;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-      width: 100%;
+      background-color: #007bff; /* Primary blue color */
+      color: white; /* White text color */
+      padding: 12px 20px; /* Internal padding */
+      border: none; /* No border */
+      border-radius: 5px; /* Rounded corners */
+      font-size: 16px; /* Font size */
+      cursor: pointer; /* Pointer cursor on hover */
+      width: 100%; /* Full width */
     }
 
+    /* Hover effect for the button */
     button:hover {
-      background-color: #0056b3;
+      background-color: #0056b3; /* Darker blue on hover */
     }
-    /* Spinner styling */
+
+    /* Spinner styling for the loading animation */
     .spinner {
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #007bff;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      animation: spin 1s linear infinite;
-      margin: 20px auto;
+      border: 4px solid #f3f3f3; /* Light gray outer border */
+      border-top: 4px solid #007bff; /* Blue spinning border */
+      border-radius: 50%; /* Circle shape */
+      width: 50px; /* Fixed width */
+      height: 50px; /* Fixed height */
+      animation: spin 1s linear infinite; /* Continuous spinning animation */
+      margin: 20px auto; /* Center align spinner */
     }
 
-    /* Spin animation */
+    /* Spin animation for the spinner */
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      0% { transform: rotate(0deg); } /* Start position */
+      100% { transform: rotate(360deg); } /* Full rotation */
     }
 
-    /* Message styling */
+    /* Styling for the loading message */
     .loading-message {
-      color: #007bff;
-      font-size: 16px;
-      margin-top: 10px;
+      color: #007bff; /* Blue text color */
+      font-size: 16px; /* Font size */
+      margin-top: 10px; /* Space above the message */
     }
 
   </style>
@@ -83,29 +90,36 @@
 
 <div class="container">
   <h1>Upload Resume</h1>
+  <!-- Form for uploading resumes -->
   <form id="uploadForm">
+    <!-- Input field for file selection -->
     <input type="file" id="fileInput" name="file" required />
+    <!-- Submit button for uploading -->
     <button type="submit">Upload</button>
   </form>
+  <!-- Hidden spinner for the loading state -->
   <div id="loadingSpinner" class="spinner" style="display: none;"></div>
+  <!-- Hidden loading message -->
   <div id="loadingMessage" class="loading-message" style="display: none;">Loading and parsing the resume using AI...</div>
 </div>
 
 <script>
-  // Event listener for form submission
+  // Select the form and loading elements
   const form = document.getElementById('uploadForm');
   const loadingSpinner = document.getElementById('loadingSpinner');
   const loadingMessage = document.getElementById('loadingMessage');
 
+  // Add an event listener for form submission
   form.addEventListener('submit', async (event) => {
-      event.preventDefault();
+      event.preventDefault(); // Prevent the default form submission behavior
 
-      const fileInput = document.getElementById('fileInput');
-      if (fileInput.files.length === 0) {
-          alert("Please select a file to upload!");
-          return;
+      const fileInput = document.getElementById('fileInput'); // Get the file input element
+      if (fileInput.files.length === 0) { // Check if no file is selected
+          alert("Please select a file to upload!"); // Alert the user
+          return; // Stop execution
       }
 
+      // Create a FormData object and append the selected file
       const formData = new FormData();
       formData.append('file', fileInput.files[0]);
 
@@ -113,35 +127,35 @@
       loadingSpinner.style.display = 'block';
       loadingMessage.style.display = 'block';
 
-
       try {
-          // Upload the file
+          // Send a POST request to upload the file
           const uploadResponse = await fetch('/api/resumes/upload', {
-              method: 'POST',
-              body: formData,
+              method: 'POST', // HTTP method
+              body: formData, // Form data to be sent
           });
 
-          const uploadResult = await uploadResponse.json();
+          const uploadResult = await uploadResponse.json(); // Parse the response as JSON
 
-          if (!uploadResponse.ok) {
-              alert(`Error: ${uploadResult.message}`);
-              return;
+          if (!uploadResponse.ok) { // Check for server-side errors
+              alert(`Error: ${uploadResult.message}`); // Alert the error message
+              return; // Stop execution
           }
 
+          // Hide the spinner and loading message after a successful response
           loadingSpinner.style.display = 'none';
           loadingMessage.style.display = 'none';
 
           // Parse the uploaded file ID from the response
           const fileId = uploadResult.id; // Adjust this if the response format differs
 
-          // Redirect to the summary page
+          // Log and redirect to the summary page with the file ID as a query parameter
           console.log('Redirecting to summary page with ID:', fileId);
-
           window.location.href = `/summary.html?id=${fileId}`;
       } catch (error) {
+          // Hide the spinner and loading message on error
           loadingSpinner.style.display = 'none';
           loadingMessage.style.display = 'none';
-          alert(`An error occurred: ${error.message}`);
+          alert(`An error occurred: ${error.message}`); // Alert the error message
       }
   });
 </script>
