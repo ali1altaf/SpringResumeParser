@@ -46,8 +46,9 @@ public class ResumeService {
             String resumeContent = contentExtractor.extractContent(file);
 
             // Send the extracted content to the Flask API to get skills and summary
-            String skills = processResumeContent(resumeContent).get("skills");
-            String summary = processResumeContent(resumeContent).get("summary");
+            Map<String, String> GeminiResponse =processResumeContent(resumeContent);
+            String skills = GeminiResponse.get("skills");
+            String summary = GeminiResponse.get("summary");
 
             // Create a new Resume entity to save in the database
             Resume resume = new Resume();

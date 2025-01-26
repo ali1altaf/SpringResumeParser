@@ -44,7 +44,7 @@ def extract_summary():
 
         # Generate skills categorized into 'Technical Skills,' 'Soft Skills,' and 'Domain-Specific Skills'
         response_skills = chat_session.send_message(
-            f"You are an AI designed to analyze resumes and extract relevant professional skills in 25 words. "
+            f"You are an AI designed to analyze resumes and extract relevant professional skills in 50 words,result should be comma separated skills. "
             f"From the following resume content, identify the technical, soft, and domain-specific skills explicitly mentioned. "
             f"Provide the skills as a categorized list under these headers: 'Technical Skills,' 'Soft Skills,' and 'Domain-Specific Skills.' "
             f"Only include items that are clearly identifiable as skills, avoiding redundant phrases or generic terms. "
