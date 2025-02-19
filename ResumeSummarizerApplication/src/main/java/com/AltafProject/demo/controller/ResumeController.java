@@ -28,9 +28,10 @@ public class ResumeController {
      */
     @PostMapping("/upload")
     public ResponseEntity<String> uploadResume(@RequestParam("file") MultipartFile file,@RequestParam("jobDescription") String jobDescription) {
-        System.out.println(jobDescription);
-        // Calls the service method to process the uploaded resume and returns an ID or failure message
 
+        System.out.println(jobDescription);
+
+        // Calls the service method to process the uploaded resume and returns an ID or failure message
         String responseId = resumeService.ProcessResume(file);
 
         // If processing failed, return a bad request response with the error message
