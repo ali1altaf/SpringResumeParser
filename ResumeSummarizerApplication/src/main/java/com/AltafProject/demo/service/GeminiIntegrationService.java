@@ -43,7 +43,7 @@ public class GeminiIntegrationService {
      * @param resumeContent The content of the resume to be analyzed.
      * @return A map containing the extracted summary and skills.
      */
-    public Map<String, String> getResumeSummaryAndSkills(String resumeContent) {
+    public Map<String, String> getResumeSummaryAndSkills(String resumeContent,String jobDescription) {
         // Create an instance of RestTemplate for making HTTP requests
         RestTemplate restTemplate = new RestTemplate();
 
@@ -55,6 +55,7 @@ public class GeminiIntegrationService {
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("resume_content", resumeContent); // Add the resume content to the request body
         requestBody.put("api_key", getGeminiApiKey()); // Add the API key to the request body
+        requestBody.put("job_description", jobDescription); // Add the job description to the request body
 
         // Wrap the headers and body into an HttpEntity object
         HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(requestBody, headers);

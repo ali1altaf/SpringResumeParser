@@ -27,6 +27,9 @@ public class Resume {
     @Column(length = 2000) // Defines the "summary" column in the database with a maximum length of 2000 characters.
     private String summary;
 
+    @Column(length = 2000) // Defines the "summary" column in the database with a maximum length of 2000 characters.
+    private String ATS_SCORE;
+
     /**
      * Default constructor.
      * Required by JPA for creating instances via reflection.
@@ -72,6 +75,15 @@ public class Resume {
     // Setter for summary.
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+
+    public String getATS() {
+        return ATS_SCORE;
+    }
+
+    public void setATS_SCORE(String ATS_SCORE) {
+        this.ATS_SCORE = ATS_SCORE;
     }
 
     /**

@@ -29,10 +29,8 @@ public class ResumeController {
     @PostMapping("/upload")
     public ResponseEntity<String> uploadResume(@RequestParam("file") MultipartFile file,@RequestParam("jobDescription") String jobDescription) {
 
-        System.out.println(jobDescription);
-
         // Calls the service method to process the uploaded resume and returns an ID or failure message
-        String responseId = resumeService.ProcessResume(file);
+        String responseId = resumeService.ProcessResume(file,jobDescription);
 
         // If processing failed, return a bad request response with the error message
         if (responseId.contains("Failed")) {
@@ -56,6 +54,7 @@ public class ResumeController {
         // Fetches the summary and skills for the given resume ID from the service layer
         String summary = resumeService.getSummaryById(id);
         String skills = resumeService.getSkillsById(id);
+        String ats_score = resumeService.getATSById(id);
 
         // If no summary is found for the given ID, return a 404 (Not Found) response with an error message
         if (summary == null || summary.isEmpty()) {
@@ -67,11 +66,17 @@ public class ResumeController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Collections.singletonMap("error", "Skills not found for the given ID."));
         }
+        // If no skills are found for the given ID, return a 404 (Not Found) response with an error message
+        else if (ats_score == null || ats_score.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonMap("error", "ats_score not found for the given ID."));
+        }
 
         // Creates a map containing the skills and summary to be returned in the response
         Map<String, String> response = new HashMap<>();
         response.put("skills", skills);
         response.put("summary", summary);
+        response.put("ats_score", ats_score);
 
         // Returns the response with HTTP 200 (OK) status and the map containing the data
         return ResponseEntity.ok(response);

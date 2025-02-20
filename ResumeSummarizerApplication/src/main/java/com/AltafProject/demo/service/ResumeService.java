@@ -27,9 +27,9 @@ public class ResumeService {
      * @param resumeContent The content of the resume as a string.
      * @return A map containing the extracted summary and skills.
      */
-    public Map<String, String> processResumeContent(String resumeContent) {
+    public Map<String, String> processResumeContent(String resumeContent,String jobDescription) {
         // Calls the Flask API for resume summary and skills extraction
-        return GeminiIntegrationService.getResumeSummaryAndSkills(resumeContent);
+        return GeminiIntegrationService.getResumeSummaryAndSkills(resumeContent,jobDescription);
     }
 
     /**
@@ -37,7 +37,7 @@ public class ResumeService {
      * @param file The resume file uploaded by the user.
      * @return The generated ID of the saved resume in the database or an error message if processing fails.
      */
-    public String ProcessResume(MultipartFile file) {
+    public String ProcessResume(MultipartFile file,String jobDescription) {
         try {
             // Get the original file name from the uploaded file
             String fileName = file.getOriginalFilename();
@@ -46,15 +46,17 @@ public class ResumeService {
             String resumeContent = contentExtractor.extractContent(file);
 
             // Send the extracted content to the Flask API to get skills and summary
-            Map<String, String> GeminiResponse =processResumeContent(resumeContent);
+            Map<String, String> GeminiResponse =processResumeContent(resumeContent,jobDescription);
             String skills = GeminiResponse.get("skills");
             String summary = GeminiResponse.get("summary");
+            String ats_match = GeminiResponse.get("ats_match");
 
             // Create a new Resume entity to save in the database
             Resume resume = new Resume();
             resume.setFileName(fileName); // Set the file name
             resume.setSkills(skills); // Set the extracted skills
             resume.setSummary(summary); // Set the extracted summary
+            resume.setATS_SCORE(ats_match); // Set the extracted summary
 
             // Save the resume to the database and retrieve the saved entity
             Resume savedResume = resumeRepository.save(resume);
@@ -93,6 +95,13 @@ public class ResumeService {
         // Use the repository to find the resume by ID and retrieve its skills
         return resumeRepository.findById(id)
                 .map(Resume::getSkills) // Get the skills if the resume is found
+                .orElse("Summary not found for the given ID."); // Return error if not found
+    }
+
+    public String getATSById(Long id) {
+        // Use the repository to find the resume by ID and retrieve its skills
+        return resumeRepository.findById(id)
+                .map(Resume::getATS) // Get the skills if the resume is found
                 .orElse("Summary not found for the given ID."); // Return error if not found
     }
 }

@@ -5,125 +5,150 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resume Summary</title>
     <style>
-        /* Styling for the body to create a centered layout with a light background */
+        /* Base styles for body and overall layout */
         body {
-            font-family: Arial, sans-serif; /* Set a clean and readable font */
-            background-color: #f4f7fc; /* Light gray background color */
-            margin: 0; /* Remove default margin */
-            padding: 0; /* Remove default padding */
-            display: flex; /* Use flexbox for layout */
-            justify-content: center; /* Horizontally center content */
-            align-items: center; /* Vertically center content */
-            height: 100vh; /* Full viewport height */
+          font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+          background: linear-gradient(135deg, #f4f7fc, #e6eefc);
+          margin: 0;
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          min-height: 100vh;
         }
 
-        /* Styling for the main container */
+        /* Main container with a modern card look */
         .container {
-            background-color: white; /* White background for contrast */
-            padding: 30px; /* Internal padding for spacing */
-            border-radius: 10px; /* Rounded corners */
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
-            width: 600px; /* Fixed width for the container */
-            text-align: center; /* Center align the text */
+          background-color: #ffffff;
+          padding: 30px;
+          border-radius: 15px;
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+          width: 90%;
+          max-width: 800px;
+          margin-bottom: 20px;
         }
 
-        /* Styling for the heading */
+        /* Header styling */
         h1 {
-            color: #333; /* Dark text color for better readability */
-            margin-bottom: 20px; /* Space below the heading */
+          text-align: center;
+          color: #333;
+          margin-bottom: 30px;
         }
 
-        /* Styling for the content section */
-        .content {
-            text-align: left; /* Align content to the left for readability */
-            margin-top: 20px; /* Space above the content */
+        /* Flex container for side-by-side details */
+        .details-container {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 20px;
         }
 
-        /* Styling for section headers in the content */
-        .content h3 {
-            color: #007bff; /* Blue color for section headers */
-            margin-bottom: 10px; /* Space below the headers */
+        .left-panel, .right-panel {
+          background-color: #fafafa;
+          border-radius: 10px;
+          padding: 20px;
+          flex: 1 1 300px;
         }
 
-        /* Styling for paragraph text */
-        .content p {
-            color: #555; /* Medium gray color for readability */
-            line-height: 1.6; /* Increased line height for better spacing */
-            white-space: pre-wrap; /* Preserve formatting and line breaks */
+        .left-panel {
+          border: 1px solid #e0e0e0;
         }
 
-        /* Styling for error messages */
+        .right-panel {
+          border: 1px solid #d0e7ff;
+          text-align: center;
+        }
+
+        /* Headings within panels */
+        .left-panel h3, .right-panel h3 {
+          margin-top: 0;
+          color: #007bff;
+        }
+
+        /* Paragraph text styling */
+        p {
+          color: #555;
+          line-height: 1.6;
+          white-space: pre-wrap;
+        }
+
+        /* Error message styling */
         .error-message {
-            color: red; /* Red color to highlight errors */
-            font-weight: bold; /* Bold font for emphasis */
+          color: #d9534f;
+          font-weight: bold;
+          text-align: center;
         }
 
-        /* Styling for the "Parse New File" button */
+        /* "Parse New File" button styling */
         .parse-new-file-button {
-            margin-top: 20px; /* Space above the button */
-            background-color: #007bff; /* Blue background */
-            color: white; /* White text color */
-            padding: 10px 20px; /* Internal padding */
-            border: none; /* Remove border */
-            border-radius: 5px; /* Rounded corners */
-            font-size: 16px; /* Font size */
-            cursor: pointer; /* Pointer cursor on hover */
-            text-decoration: none; /* Remove underline */
-            display: inline-block; /* Inline-block for consistent spacing */
+          background-color: #007bff;
+          color: white;
+          padding: 12px 25px;
+          border: none;
+          border-radius: 8px;
+          font-size: 16px;
+          cursor: pointer;
+          text-decoration: none;
+          transition: background-color 0.3s ease;
         }
 
-        /* Hover effect for the button */
         .parse-new-file-button:hover {
-            background-color: #0056b3; /* Darker blue on hover */
+          background-color: #0056b3;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Resume Details</h1>
-    <div class="content" id="resumeDetails">
-        <!-- This section will display the resume skills and summary -->
+    <h1>Resume Summary</h1>
+    <div class="details-container">
+        <div class="left-panel" id="resumeDetails">
+            <h3>Skills & Summary</h3>
+            <div id="resumeContent">
+                <!-- Resume skills and summary will be injected here -->
+            </div>
+        </div>
+        <div class="right-panel">
+            <h3>ATS Match Score</h3>
+            <p id="atsScore">Loading...</p>
+        </div>
     </div>
-
-    <!-- Link to redirect users to upload a new file -->
-    <a href="index.html" class="parse-new-file-button">Parse New File</a>
 </div>
 
+<a href="index.html" class="parse-new-file-button">Parse New File</a>
+
 <script>
-    // Extract the file ID from the URL query parameters
-    const urlParams = new URLSearchParams(window.location.search); // Get the query parameters
-    const fileId = urlParams.get('id'); // Extract the 'id' parameter value
+    const urlParams = new URLSearchParams(window.location.search);
+    const fileId = urlParams.get('id');
+    const resumeContentDiv = document.getElementById('resumeContent');
+    const atsScoreDiv = document.getElementById('atsScore');
 
-    const resumeDetailsDiv = document.getElementById('resumeDetails'); // Reference to the content div
-
-    if (!fileId) { // Check if no file ID is provided
-        resumeDetailsDiv.innerHTML = '<p class="error-message">Error: Invalid or missing file ID.</p>';
+    if (!fileId) {
+        resumeContentDiv.innerHTML = '<p class="error-message">Error: Invalid or missing file ID.</p>';
+        atsScoreDiv.textContent = "N/A";
     } else {
-        // Fetch resume details from the server using the provided file ID
         fetch(`/api/resumes/summary/${fileId}`)
-            .then(response => response.json()) // Parse the response as JSON
+            .then(response => response.json())
             .then(data => {
-                if (data.error) { // Check if there is an error in the response
-                    resumeDetailsDiv.innerHTML = `<p class="error-message">Error: ${data.error}</p>`;
+                if (data.error) {
+                    resumeContentDiv.innerHTML = `<p class="error-message">Error: ${data.error}</p>`;
+                    atsScoreDiv.textContent = "N/A";
                 } else {
-                    // Format the skills section to add bold styling and line breaks
                     const skillsFormatted = data.skills
-                        .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>') // Convert **text** to bold
-                        .replace(/\. /g, '.<br>'); // Add line breaks after each period
+                        ? data.skills.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\. /g, '.<br>')
+                        : "No skills available.";
 
-                    // Display the fetched skills and summary in the content div
-                    resumeDetailsDiv.innerHTML = `
-                        <h3>Skills:</h3>
-                        <p>${skillsFormatted || "No skills available."}</p>
-                        <h3>Summary:</h3>
+                    resumeContentDiv.innerHTML = `
+                        <h4>Skills:</h4>
+                        <p>${skillsFormatted}</p>
+                        <h4>Summary:</h4>
                         <p>${data.summary || "No summary available."}</p>
                     `;
+                    atsScoreDiv.textContent = data.ats_score !== undefined ? `${data.ats_score}%` : "No ATS match available.";
                 }
             })
             .catch(error => {
-                // Display an error message if the fetch request fails
-                resumeDetailsDiv.innerHTML = `<p class="error-message">Error fetching resume details: ${error.message}</p>`;
+                resumeContentDiv.innerHTML = `<p class="error-message">Error fetching resume details: ${error.message}</p>`;
+                atsScoreDiv.textContent = "N/A";
             });
     }
 </script>

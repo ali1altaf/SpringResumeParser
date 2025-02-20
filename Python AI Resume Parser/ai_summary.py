@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify  # Import Flask for creating the web app and handling HTTP requests/responses
-import os  # Import os for environment variable access (optional in this context)
 import google.generativeai as genai  # Import the Gemini Generative AI library for using generative AI models
 
 # Initialize a Flask application
@@ -15,10 +14,14 @@ def extract_summary():
     data = request.json
     resume_content = data.get("resume_content")  # Extract the resume content from the request JSON
     gemini_api_key = data.get("api_key")  # Extract the Gemini API key from the request JSON
+    job_description = data.get("job_description")  # Extract the job description from the request JSON
 
     # Check if required fields are provided in the request
     if not resume_content:
         return jsonify({"error": "Resume content is missing."}), 400
+
+    if not gemini_api_key:
+        return jsonify({"error": "API key is missing."}), 400
 
     # Configure the Gemini API key
     genai.configure(api_key=gemini_api_key)
@@ -61,11 +64,38 @@ def extract_summary():
             f"Resume Content:\n{resume_content}"
         )
 
-        # Return the generated summary and skills as a JSON response
-        return jsonify({
-            "summary": response_summary.text,  # Extract the text of the professional summary
-            "skills": response_skills.text     # Extract the text of the categorized skills
-        })
+        # Initialize response object
+        result = {
+            "summary": response_summary.text.strip(),
+            "skills": response_skills.text.strip()
+        }
+
+        # If job description is provided, generate ATS matchability score
+        if job_description is not None:
+            response_ats = chat_session.send_message(
+                f"You are an AI specialized in resume analysis and Applicant Tracking System (ATS) scoring. "
+                f"Given a job description and a resume text, analyze how well the resume aligns with the job requirements. "
+                f"Provide a matchability score between 0 and 100, considering factors like skill relevance, experience match, keyword alignment, and overall job fit. "
+                f"Also, highlight key missing skills or qualifications. Ensure accuracy in evaluation and provide actionable feedback. "
+                f"Here is the job description:\n{job_description}\n\n"
+                f"Here is the resume content:\n{resume_content}\n\n"
+                f"Return the response in the following JSON format:\n"
+                f"```json\n"
+                f"{{\n"
+                f'  "matchability_score": "integer (0-100)",\n'
+                f'  "matching_skills": ["list of matched skills"],\n'
+                f'  "missing_skills": ["list of missing skills"],\n'
+                f'  "experience_match": "percentage match based on experience",\n'
+                f'  "summary": "brief explanation of the scoring rationale"\n'
+                f"}}\n"
+                f"```"
+            )
+
+            # Add ATS response to result
+            result["ats_match"] = response_ats.text.strip()
+
+        # Return the generated summary, skills, and (if available) ATS matchability score
+        return jsonify(result)
 
     except Exception as e:
         # Return an error response with the exception message if something goes wrong
@@ -73,5 +103,4 @@ def extract_summary():
 
 if __name__ == '__main__':
     # Run the Flask app on all network interfaces (host='0.0.0.0') at port 5001
-    # This allows the app to be accessed from other devices on the same network
     app.run(host='0.0.0.0', port=5001)
