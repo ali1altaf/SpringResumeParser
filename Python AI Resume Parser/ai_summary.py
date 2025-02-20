@@ -71,7 +71,7 @@ def extract_summary():
         }
 
         # If job description is provided, generate ATS matchability score
-        if job_description is not None:
+        if job_description.strip():
             response_ats = chat_session.send_message(
                 f"You are an AI specialized in resume analysis and Applicant Tracking System (ATS) scoring. "
                 f"Given a job description and a resume text, analyze how well the resume aligns with the job requirements. "
@@ -90,7 +90,6 @@ def extract_summary():
                 f"}}\n"
                 f"```"
             )
-
             # Add ATS response to result
             result["ats_match"] = response_ats.text.strip()
 
