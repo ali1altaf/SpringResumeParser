@@ -16,7 +16,7 @@ public class Resume {
     private Long id;
 
     // Column for storing the resume file name with a length constraint.
-    @Column(length = 30) // Defines the "fileName" column in the database with a maximum length of 30 characters.
+    @Column(length = 50) // Defines the "fileName" column in the database with a maximum length of 30 characters.
     private String fileName;
 
     // Column for storing extracted skills with a length constraint.
@@ -27,7 +27,7 @@ public class Resume {
     @Column(length = 2000) // Defines the "summary" column in the database with a maximum length of 2000 characters.
     private String summary;
 
-    @Column(length = 2000) // Defines the "summary" column in the database with a maximum length of 2000 characters.
+    @Column(length = 3000) // Defines the "summary" column in the database with a maximum length of 2000 characters.
     private String ATS_SCORE;
 
     /**

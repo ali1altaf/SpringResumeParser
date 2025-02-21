@@ -79,7 +79,7 @@ def extract_summary():
                 f"Also, highlight key missing skills or qualifications. Ensure accuracy in evaluation and provide actionable feedback. "
                 f"Here is the job description:\n{job_description}\n\n"
                 f"Here is the resume content:\n{resume_content}\n\n"
-                f"Return the response in the following HashMap format as a string:\n"
+                f"Return the response in the following HashMap format as a string and limit the length of the string to 2999 at max:\n"
                 f"{{\n"
                 f'  "matchability_score": "integer (0-100)",\n'
                 f'  "matching_skills": "matched skills",\n'
