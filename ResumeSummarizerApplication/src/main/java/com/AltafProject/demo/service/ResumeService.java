@@ -102,6 +102,6 @@ public class ResumeService {
         // Use the repository to find the resume by ID and retrieve its skills
         return resumeRepository.findById(id)
                 .map(Resume::getATS) // Get the skills if the resume is found
-                .orElse("Summary not found for the given ID."); // Return error if not found
+                .orElse(null); // Return error if not found
     }
 }

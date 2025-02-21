@@ -79,13 +79,16 @@ def extract_summary():
                 f"Also, highlight key missing skills or qualifications. Ensure accuracy in evaluation and provide actionable feedback. "
                 f"Here is the job description:\n{job_description}\n\n"
                 f"Here is the resume content:\n{resume_content}\n\n"
-                f"Return the response in the following JSON format:\n"
+                f"Return the response in the following HashMap format as a string:\n"
                 f"{{\n"
                 f'  "matchability_score": "integer (0-100)",\n'
-                f'  "matching_skills": ["list of matched skills"],\n'
-                f'  "missing_skills": ["list of missing skills"],\n'
+                f'  "matching_skills": "matched skills",\n'
+                f'  "missing_skills": "missing skills",\n'
                 f'  "experience_match": "percentage match based on experience",\n'
-                f'  "summary": "brief explanation of the scoring rationale"\n'
+                f'  "ATS_Score_Summary": "brief explanation of the scoring rationale"\n'
+                f'  "Suggested Resume Improvements" : "Suggest specific ways to optimize the resume, such '
+                f'as adding missing keywords, highlighting relevant projects, restructuring sections, or gaining additional certifications."'
+                
                 f"}}\n"
             )
             # Add ATS response to result

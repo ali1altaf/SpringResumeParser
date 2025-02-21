@@ -1,16 +1,21 @@
 package com.AltafProject.demo.controller;
 
 import com.AltafProject.demo.service.ResumeService; // Service layer for business logic
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper; // Used for JSON operations (not directly used in this code)
 import org.springframework.beans.factory.annotation.Autowired; // Enables dependency injection
 import org.springframework.http.HttpStatus; // Represents HTTP status codes
 import org.springframework.http.ResponseEntity; // Wraps HTTP responses with status and body
 import org.springframework.web.bind.annotation.*; // For creating RESTful APIs
 import org.springframework.web.multipart.MultipartFile; // Handles file uploads
-
 import java.util.Collections; // Provides utility methods for creating immutable maps
 import java.util.HashMap; // Map implementation for storing key-value pairs
 import java.util.Map; // Interface representing a key-value mapping
+
+
+
+import static org.apache.http.message.BasicLineFormatter.formatHeader;
 
 // Marks this class as a REST controller and allows handling HTTP requests
 @RestController
@@ -50,11 +55,12 @@ public class ResumeController {
      * @return A ResponseEntity containing a map of summary and skills, or an error message.
      */
     @GetMapping("/summary/{id}")
-    public ResponseEntity<Map<String, String>> getResumeSummary(@PathVariable Long id) {
+    public ResponseEntity<Map<String, String>> getResumeSummary(@PathVariable Long id) throws JsonProcessingException {
         // Fetches the summary and skills for the given resume ID from the service layer
         String summary = resumeService.getSummaryById(id);
         String skills = resumeService.getSkillsById(id);
-        String ats_score = resumeService.getATSById(id);
+        String ats_score_temp = resumeService.getATSById(id);
+
 
         // If no summary is found for the given ID, return a 404 (Not Found) response with an error message
         if (summary == null || summary.isEmpty()) {
@@ -66,20 +72,46 @@ public class ResumeController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Collections.singletonMap("error", "Skills not found for the given ID."));
         }
-        // If no skills are found for the given ID, return a 404 (Not Found) response with an error message
-        else if (ats_score == null || ats_score.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Collections.singletonMap("error", "ats_score not found for the given ID."));
-        }
+
+        String  ats_score = processATSScore(ats_score_temp);
+
 
         // Creates a map containing the skills and summary to be returned in the response
         Map<String, String> response = new HashMap<>();
         response.put("skills", skills);
         response.put("summary", summary);
-        System.out.println(ats_score);
         response.put("ats_score", ats_score);
 
         // Returns the response with HTTP 200 (OK) status and the map containing the data
         return ResponseEntity.ok(response);
+
     }
+
+
+    private String processATSScore(String atsScoreTemp) throws JsonProcessingException {
+
+        if (atsScoreTemp == null || atsScoreTemp.isEmpty()) {
+            return "Enter Job Description for ATS score";
+        }
+
+        String atsScoreRep = atsScoreTemp.replaceAll("```", "")
+                .replaceAll("json", "")
+                .replaceAll("\\[", "")
+                .replaceAll("]", "");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        HashMap<String, String> resultMap = objectMapper.readValue(atsScoreRep, new TypeReference<HashMap<String, String>>() {});
+
+        StringBuilder formattedAtsString = new StringBuilder();
+        for (Map.Entry<String, String> entry : resultMap.entrySet()) {
+            formattedAtsString.append(entry.getKey().replace("_", " ").toUpperCase())
+                    .append("\n")
+                    .append(entry.getValue())
+                    .append("\n\n");
+        }
+
+        return formattedAtsString.toString();
+    }
+
+
 }
