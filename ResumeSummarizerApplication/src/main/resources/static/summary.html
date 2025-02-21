@@ -143,7 +143,7 @@
                         <h4>Summary:</h4>
                         <p>${data.summary || "No summary available."}</p>
                     `;
-                    atsScoreDiv.textContent = data.ats_score !== undefined ? `${data.ats_score}%` : "No ATS match available.";
+                    atsScoreDiv.textContent = data.ats_score !== undefined ? `${data.ats_score}` : "No ATS match available.";
                 }
             })
             .catch(error => {

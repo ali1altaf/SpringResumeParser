@@ -76,6 +76,7 @@ public class ResumeController {
         Map<String, String> response = new HashMap<>();
         response.put("skills", skills);
         response.put("summary", summary);
+        System.out.println(ats_score);
         response.put("ats_score", ats_score);
 
         // Returns the response with HTTP 200 (OK) status and the map containing the data
