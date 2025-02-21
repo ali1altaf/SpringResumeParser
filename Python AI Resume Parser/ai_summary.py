@@ -80,7 +80,6 @@ def extract_summary():
                 f"Here is the job description:\n{job_description}\n\n"
                 f"Here is the resume content:\n{resume_content}\n\n"
                 f"Return the response in the following JSON format:\n"
-                f"```json\n"
                 f"{{\n"
                 f'  "matchability_score": "integer (0-100)",\n'
                 f'  "matching_skills": ["list of matched skills"],\n'
@@ -88,7 +87,6 @@ def extract_summary():
                 f'  "experience_match": "percentage match based on experience",\n'
                 f'  "summary": "brief explanation of the scoring rationale"\n'
                 f"}}\n"
-                f"```"
             )
             # Add ATS response to result
             result["ats_match"] = response_ats.text.strip()
