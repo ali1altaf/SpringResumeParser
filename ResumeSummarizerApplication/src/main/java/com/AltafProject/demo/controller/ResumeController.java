@@ -113,5 +113,4 @@ public class ResumeController {
         return formattedAtsString.toString();
     }
 
-
 }
