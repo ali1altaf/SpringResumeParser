@@ -89,7 +89,6 @@ def extract_summary():
                 f'  "Suggested Resume Improvements" : "Suggest specific ways to optimize the resume, such '
                 f'as adding missing keywords, highlighting relevant projects, restructuring sections, or gaining additional certifications'
                 f'and format the output as points with line breaks as and where required."'
-                
                 f"}}\n"
             )
             # Add ATS response to result
