@@ -64,35 +64,62 @@ def extract_summary():
             f"Resume Content:\n{resume_content}"
         )
 
-        # Initialize response object
-        result = {
-            "summary": response_summary.text.strip(),
-            "skills": response_skills.text.strip()
-        }
+        response_ats = ""
 
-        # If job description is provided, generate ATS matchability score
-        if job_description.strip():
-            response_ats = chat_session.send_message(
-                f"You are an AI specialized in resume analysis and Applicant Tracking System (ATS) scoring. "
-                f"Given a job description and a resume text, analyze how well the resume aligns with the job requirements. "
-                f"Provide a matchability score between 0 and 100, considering factors like skill relevance, experience match, keyword alignment, and overall job fit. "
-                f"Also, highlight key missing skills or qualifications. Ensure accuracy in evaluation and provide actionable feedback. "
-                f"Here is the job description:\n{job_description}\n\n"
-                f"Here is the resume content:\n{resume_content}\n\n"
-                f"Return the response in the following HashMap format as a string and limit the length of the string to 2999 at max:\n"
-                f"{{\n"
-                f'  "matchability_score": "integer (0-100)",\n'
-                f'  "matching_skills": "matched skills",\n'
-                f'  "missing_skills": "missing skills",\n'
-                f'  "experience_match": "percentage match based on experience",\n'
-                f'  "ATS_Score_Summary": "brief explanation of the scoring rationale"\n'
-                f'  "Suggested Resume Improvements" : "Suggest specific ways to optimize the resume, such '
-                f'as adding missing keywords, highlighting relevant projects, restructuring sections, or gaining additional certifications'
-                f'and format the output as points with line breaks as and where required."'
-                f"}}\n"
-            )
-            # Add ATS response to result
-            result["ats_match"] = response_ats.text.strip()
+        try:
+            if job_description and job_description.strip():  # Ensuring job description is not empty
+                response_ats = chat_session.send_message(
+                    f"You are an AI specialized in resume analysis and Applicant Tracking System (ATS) scoring. "
+                    f"Given a job description and a resume text, analyze how well the resume aligns with the job requirements. "
+                    f"Provide a matchability score between 0 and 100, considering factors like skill relevance, experience match, keyword alignment, and overall job fit. "
+                    f"Also, highlight key missing skills or qualifications. Ensure accuracy in evaluation and provide actionable feedback. "
+                    f"Here is the job description:\n{job_description.strip()}\n\n"
+                    f"Here is the resume content:\n{resume_content.strip()}\n\n"
+                    f"Return the response in the following HashMap format as a string (max 2999 characters):\n"
+                    f"{{\n"
+                    f'  "matchability_score": "integer (0-100)",\n'
+                    f'  "matching_skills": "matched skills",\n'
+                    f'  "missing_skills": "missing skills",\n'
+                    f'  "experience_match": "percentage match based on experience",\n'
+                    f'  "ATS_Score_Summary": "brief explanation of the scoring rationale",\n'
+                    f'  "Suggested_Resume_Improvements": "Suggest specific ways to optimize the resume, such '
+                    f'as adding missing keywords, highlighting relevant projects, restructuring sections, or gaining additional certifications. '
+                    f'Format the output as points with numbered line breaks where required."\n'
+                    f"}}\n"
+                )
+            else:
+                response_ats = chat_session.send_message(
+                    f"You are an AI specialized in resume analysis and Applicant Tracking System (ATS) scoring. "
+                    f"Given a resume text, evaluate it based on key aspects of an effective resume, considering factors such as skill relevance based on the "
+                    f"relevant industry (derived from work experience and projects), experience clarity, keyword optimization, readability, and ATS compatibility. "
+                    f"Provide an ATS score between 0 and 100, reflecting how well the resume is structured for ATS systems. "
+                    f"Identify key strengths, highlight important elements of a strong resume, and suggest specific improvements to enhance its effectiveness. "
+                    f"Ensure accuracy in evaluation and provide actionable feedback. "
+                    f"Here is the resume content:\n{resume_content.strip()}\n\n"
+                    f"Return the response in the following HashMap format as a string (max 2999 characters):\n"
+                    f"{{\n"
+                    f'  "ATS_score": "integer (0-100)",\n'
+                    f'  "resume_strengths": "highlighted strengths in skills, formatting, achievements, and clarity",\n'
+                    f'  "important_resume_qualities": "key elements of a good resume, such as readability, keyword optimization, structured sections, and quantified achievements",\n'
+                    f'  "resume_weaknesses": "areas needing improvement, such as missing skills, vague descriptions, weak formatting, or lack of impact-driven statements",\n'
+                    f'  "Suggested_Resume_Improvements": "Suggest specific ways to optimize the resume, such '
+                    f'as adding industry-relevant keywords, emphasizing measurable achievements, restructuring sections for clarity, '
+                    f'or acquiring additional certifications. Format the output as points with numbered line breaks where required."\n'
+                    f"}}\n"
+                )
+
+            # Ensure the response is valid and not empty
+            ats_result = response_ats.text.strip() if response_ats and response_ats.text.strip() else "N/A"
+
+        except Exception as e:
+            ats_result = f"Error: {str(e)}"  # Handle unexpected AI response failures
+
+        # Final result dictionary
+        result = {
+            "summary": response_summary.text.strip() if response_summary else "N/A",
+            "skills": response_skills.text.strip() if response_skills else "N/A",
+            "ats_match": ats_result
+        }
 
         # Return the generated summary, skills, and (if available) ATS matchability score
         return jsonify(result)
