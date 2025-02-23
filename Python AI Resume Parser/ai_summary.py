@@ -87,7 +87,8 @@ def extract_summary():
                 f'  "experience_match": "percentage match based on experience",\n'
                 f'  "ATS_Score_Summary": "brief explanation of the scoring rationale"\n'
                 f'  "Suggested Resume Improvements" : "Suggest specific ways to optimize the resume, such '
-                f'as adding missing keywords, highlighting relevant projects, restructuring sections, or gaining additional certifications."'
+                f'as adding missing keywords, highlighting relevant projects, restructuring sections, or gaining additional certifications'
+                f'and format the output as points with line breaks as and where required."'
                 
                 f"}}\n"
             )
