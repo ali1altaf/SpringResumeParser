@@ -107,51 +107,21 @@
                 <!-- Resume skills and summary will be injected here -->
             </div>
         </div>
-        <div class="right-panel">
-            <h3>ATS Match Score</h3>
-            <p id="atsScore">Loading...</p>
-        </div>
     </div>
 </div>
 
+
+<div class="container">
+    <div class="right-panel">
+        <h3>ATS Match Score</h3>
+        <div id="atsScore">Loading...</div>
+    </div>
+</div>
+
+
 <a href="index.html" class="parse-new-file-button">Parse New File</a>
 
-<script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const fileId = urlParams.get('id');
-    const resumeContentDiv = document.getElementById('resumeContent');
-    const atsScoreDiv = document.getElementById('atsScore');
-
-    if (!fileId) {
-        resumeContentDiv.innerHTML = '<p class="error-message">Error: Invalid or missing file ID.</p>';
-        atsScoreDiv.textContent = "N/A";
-    } else {
-        fetch(`/api/resumes/summary/${fileId}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    resumeContentDiv.innerHTML = `<p class="error-message">Error: ${data.error}</p>`;
-                    atsScoreDiv.textContent = "N/A";
-                } else {
-                    const skillsFormatted = data.skills
-                        ? data.skills.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\. /g, '.<br>')
-                        : "No skills available.";
-
-                    resumeContentDiv.innerHTML = `
-                        <h4>Skills:</h4>
-                        <p>${skillsFormatted}</p>
-                        <h4>Summary:</h4>
-                        <p>${data.summary || "No summary available."}</p>
-                    `;
-                    atsScoreDiv.textContent = data.ats_score !== undefined ? `${data.ats_score}` : "No ATS match available.";
-                }
-            })
-            .catch(error => {
-                resumeContentDiv.innerHTML = `<p class="error-message">Error fetching resume details: ${error.message}</p>`;
-                atsScoreDiv.textContent = "N/A";
-            });
-    }
-</script>
+<script src="JScripts/finalPageJs.js"></script>
 
 </body>
 </html>

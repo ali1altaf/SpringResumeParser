@@ -70,6 +70,8 @@ def extract_summary():
             if job_description and job_description.strip():  # Ensuring job description is not empty
                 response_ats = chat_session.send_message(
                     f"You are an AI specialized in resume analysis and Applicant Tracking System (ATS) scoring. "
+                    f"Your task is to evaluate how well a given resume aligns with a job description by analyzing "
+                    f"skill relevance, experience match, keyword alignment, and overall job fit "
                     f"Given a job description and a resume text, analyze how well the resume aligns with the job requirements. "
                     f"Provide a matchability score between 0 and 100, considering factors like skill relevance, experience match, keyword alignment, and overall job fit. "
                     f"Also, highlight key missing skills or qualifications. Ensure accuracy in evaluation and provide actionable feedback. "
@@ -77,13 +79,15 @@ def extract_summary():
                     f"Here is the resume content:\n{resume_content.strip()}\n\n"
                     f"Return the response in the following HashMap format as a string (max 2999 characters):\n"
                     f"{{\n"
-                    f'  "matchability_score": "integer (0-100)",\n'
-                    f'  "matching_skills": "matched skills",\n'
-                    f'  "missing_skills": "missing skills",\n'
-                    f'  "experience_match": "percentage match based on experience",\n'
-                    f'  "ATS_Score_Summary": "brief explanation of the scoring rationale",\n'
+                    f'  "job_description": put job description value as 1,\n'
+                    f'  "ATS_score": " Quantify matchability based on alignment with key job requirements  give a score between (0-100)",\n'
+                    f'  "resume_strengths": "Identify skills, experiences, and keywords that match the job description.",\n'
+                    f'  "resume_weaknesses": "Highlight missing skills, qualifications, or areas lacking emphasis.",\n'
+                    f'  "important_resume_qualities": "brief explanation of the scoring rationale.",\n'
                     f'  "Suggested_Resume_Improvements": "Suggest specific ways to optimize the resume, such '
-                    f'as adding missing keywords, highlighting relevant projects, restructuring sections, or gaining additional certifications. '
+                    f'as adding missing keywords, highlighting relevant projects, restructuring sections, or '
+                    f'gaining additional certifications. '
+                    f'Provide actionable recommendations to enhance the resume’s ATS compatibility'
                     f'Format the output as points with numbered line breaks where required."\n'
                     f"}}\n"
                 )
@@ -98,6 +102,7 @@ def extract_summary():
                     f"Here is the resume content:\n{resume_content.strip()}\n\n"
                     f"Return the response in the following HashMap format as a string (max 2999 characters):\n"
                     f"{{\n"
+                    f'  "job_description": put job description value as 0,\n'
                     f'  "ATS_score": "integer (0-100)",\n'
                     f'  "resume_strengths": "highlighted strengths in skills, formatting, achievements, and clarity",\n'
                     f'  "important_resume_qualities": "key elements of a good resume, such as readability, keyword optimization, structured sections, and quantified achievements",\n'
@@ -113,6 +118,7 @@ def extract_summary():
 
         except Exception as e:
             ats_result = f"Error: {str(e)}"  # Handle unexpected AI response failures
+
 
         # Final result dictionary
         result = {

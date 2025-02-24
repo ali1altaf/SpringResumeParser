@@ -73,14 +73,34 @@ public class ResumeController {
                     .body(Collections.singletonMap("error", "Skills not found for the given ID."));
         }
 
-        String  ats_score = processATSScore(ats_score_temp);
 
+
+        HashMap ats_details = processATSScore(ats_score_temp);
+
+        String job_des = ats_details.get("job_description").toString();
 
         // Creates a map containing the skills and summary to be returned in the response
         Map<String, String> response = new HashMap<>();
+
+        String ats_imp_qualities = ats_details.get("important_resume_qualities").toString();
+
+        String ats_score = ats_details.get("ATS_score").toString();
+
+        String resume_weakness = ats_details.get("resume_weaknesses").toString();
+
+
+        String resume_strengths = ats_details.get("resume_strengths").toString();
+
+        String Suggested_Resume_Improvements = ats_details.get("Suggested_Resume_Improvements").toString();
+
         response.put("skills", skills);
         response.put("summary", summary);
+        response.put("job_des", job_des);
         response.put("ats_score", ats_score);
+        response.put("ats_imp_qualities", ats_imp_qualities);
+        response.put("resume_weakness", resume_weakness);
+        response.put("resume_strengths", resume_strengths);
+        response.put("Suggested_Resume_Improvements", Suggested_Resume_Improvements);
 
         // Returns the response with HTTP 200 (OK) status and the map containing the data
         return ResponseEntity.ok(response);
@@ -88,29 +108,24 @@ public class ResumeController {
     }
 
 
-    private String processATSScore(String atsScoreTemp) throws JsonProcessingException {
+    private HashMap processATSScore(String atsScoreTemp) throws JsonProcessingException {
 
+        Map<String, String> emptyMap = new HashMap<>();
         if (atsScoreTemp == null || atsScoreTemp.isEmpty()) {
-            return "Enter Job Description for ATS score";
+            return (HashMap) emptyMap;
         }
 
         String atsScoreRep = atsScoreTemp.replaceAll("```", "")
                 .replaceAll("json", "")
                 .replaceAll("\\[", "")
+                .replaceAll("\\*", "")
                 .replaceAll("]", "");
 
         ObjectMapper objectMapper = new ObjectMapper();
         HashMap<String, String> resultMap = objectMapper.readValue(atsScoreRep, new TypeReference<HashMap<String, String>>() {});
 
-        StringBuilder formattedAtsString = new StringBuilder();
-        for (Map.Entry<String, String> entry : resultMap.entrySet()) {
-            formattedAtsString.append(entry.getKey().replace("_", " ").toUpperCase())
-                    .append("\n")
-                    .append(entry.getValue())
-                    .append("\n\n");
-        }
-
-        return formattedAtsString.toString();
+        return resultMap;
     }
+
 
 }
